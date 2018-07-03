@@ -20,5 +20,9 @@ Installation step by step
 
 8.) terminal: npm install
 
-9.) terminal npm run serve
+9.) delete the components directory in the project directory, copy the necessary code to the right place
+
+10.) terminal npm run serve
+
+
 
