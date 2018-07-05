@@ -1,8 +1,8 @@
-# project
+# Simple webshop prototype
 
-Simple webshop prototype
 
 Installation guide step by step
+
 
 0.) open terminal, create an install directory and enter this folder
 
