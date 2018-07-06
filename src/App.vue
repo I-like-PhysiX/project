@@ -3,7 +3,7 @@
     <b-navbar toggleable="md" variant="dark" sticky>
       <b-navbar-toggle target="nav_collapse" :disabled="csakkosar"></b-navbar-toggle>
       <template>
-        <div id="myContainer">
+        <div id="myContainer" style="margin-left: 10px;">
            <div class="my-3">
              <!-- our triggering (target) element -->
              <b-btn
@@ -13,7 +13,7 @@
                     @click="search='', csakkosar=true"
                     size="md"
                     variant="dark"
-                    style="margin: 0 1em;">
+                    style="margin-left: 0px;">
                     Kosár
               </b-btn>
            </div>
@@ -110,8 +110,8 @@
     </div>
     </template>
     <b-collapse is-nav id="nav_collapse">
-      <b-navbar-nav class="ml-auto" style="margin: 0 10px;">
-        <ul class="navbar-nav mr-auto">
+      <b-navbar-nav class="ml-auto">
+        <ul class="navbar-nav mr-auto" style="margin-left: 0px; margin-right: 20px;">
           <li class="nav-item active" style="margin: 10px 5px;">
             <select id="selecttype" v-model="selected" v-on:click="szur()" class="form-control input-sm">
               <option value="">Termékfajták</option>
@@ -122,7 +122,7 @@
               <option v-for="item in sortOptions" :value="item.value">{{item.text}}</option>
             </select>
           </li>
-          <li class="nav-item active" style="margin: 10px 5px;">
+          <li class="nav-item active" style="margin-left: 5px; margin-right: 20px; margin-top: 10px; margin-bottom: 10px;">
             <input
                      class="mr-sm-2 form-control input-sm"
                      type="text"
@@ -146,21 +146,20 @@
              block
              @click="hideModal">Bezárás</b-btn>
     </b-modal>
-    <b-card-group columns fluid id="shapp">
+    <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)" style="margin-left: 5px; font-family: courier;">
       <b-card
               bg-variant="light"
-              style="max-width: 40rem;"
               id="card"
               footer-bg-variant="secondary"
-              show v-for="elem in szurttomb" :key="elem.id"
+              show v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
               :img-src="elem.url"
-              fluid alt="Responsive image"
+              style="margin:0,10px; margin-bottom: 50px; max-width: 288px;"
               img-alt="A termék képe"
               img-top>
-       <p class="card-text">{{elem.termek}}, {{elem.egysar}} Ft/{{elem.egys}}</p>
+       <p class="card-text"><p>{{elem.termek}}</p> <p>{{elem.egysar}} Ft/{{elem.egys}}</p></p>
        <p class="card-text" v-if="elem.ossz > 0">Raktáron</p>
        <p class="card-text" v-else>Elfogyott</p>
-       <p class="card-text"><b> Mennyiség: {{elem.alap}} {{elem.egys}} Ár: {{Math.round(elem.alap*elem.egysar)}} Ft</b></p>
+       <p class="card-text"><b> <p>Mennyiség: {{elem.alap}} {{elem.egys}}</p> <p>Ár: {{Math.round(elem.alap*elem.egysar)}} Ft</p></b></p>
        <b-input
                 class="form-control input-md text-center"
                 :disabled="elem.ossz === 0 ? true : false"
@@ -173,7 +172,7 @@
                 size="md"
                 type="range"
                 id="myNumber"
-                style="padding: 20px 0; margin-top: 10px;"/>
+                style="padding: 20px 0; margin-top: 0px;"/>
         <b-input
                 class="form-control input-md text-center"
                 :disabled="elem.ossz === 0 ? true : false"
@@ -185,16 +184,9 @@
                 step="1"
                 type="range"
                 size="md"
-                style="padding: 20px 0; margin-top: 10px;"/>
+                style="padding: 20px 0; margin-top: 0px;"/>
       </b-card>
-    </b-card-group>
-
-    <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)">
-    <span v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)">
-      {{elem.id}}
-    </span>
-  </div>
-
+    </div>
   </div>
 </template>
 
@@ -225,17 +217,17 @@ export default {
           { text: 'abc szerint', value: 'termek' },
           { text: 'ár szerint', value: 'egysar' }
        ],
-      itemsPerRow: 4,
+      itemsPerRow: 5,
       tomb: [
         {id:1, type: "gyümölcs", termek: "Alma, gála", egysar:310, egys:'kg', alap:0, ossz:50, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
         {id:2, type: "gyümölcs", termek: "Alma, golden", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
         {id:3, type: "gyümölcs", termek: "Alma, jonatán", egysar:290, egys:'kg', alap:0, ossz:100, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
         {id:4, type: "gyümölcs", termek: "Körte, vilmos", egysar:550, egys:'kg', alap:0, ossz:100, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
-        {id:5, type: "gyümölcs", termek: "Narancs, lédig", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/YM/OY/MY-23950624/fresh-oranges-250x250.jpg'},
+        {id:5, type: "gyümölcs", termek: "Narancs, lédig", egysar:350, egys:'kg', alap:0, ossz:0, url: 'http://images6.fanpop.com/image/photos/34500000/Orange-Fruit-orange-34512935-600-600.png'},
         {id:6, type: "gyümölcs", termek: "Banán, lédig", egysar:350, egys:'kg', alap:0, ossz:50, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
-        {id:7, type: "gyümölcs", termek: "Eper, magyar", egysar:600, egys:'kg', alap:0, ossz:100, url: 'http://iconshow.me/media/images/food/Fruit-Salad-icons/png/256/strawberry.png'},
-        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", egysar:250, egys:'doboz', alap:0, ossz:100, url: 'https://s11284.pcdn.co/wp-content/uploads/2017/06/Breakstones-sour-cream.jpg'},
-        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://s11284.pcdn.co/wp-content/uploads/2017/06/Breakstones-sour-cream.jpg'}
+        {id:7, type: "gyümölcs", termek: "Eper, magyar", egysar:600, egys:'kg', alap:0, ossz:100, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
+        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", egysar:250, egys:'doboz', alap:0, ossz:100, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
+        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
       ]
     }
   },
@@ -367,24 +359,20 @@ export default {
  #app{
   font-family: courier;
  }
- #shapp {
-   margin:30px;
-   font-family: courier;
-   display: block;
- }
  .form-control {
     display: inline-block;
 }
 #card:hover{
-  border-width:2px;
+  border-width:1px;
   border-style:ridge;
   border-color:#4285F4
 }
-
-.row {
-  border: solid 1px #404040;
-  padding: 10px;
-  margin:30px;
+#card{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-family: courier;
 }
 
 </style>
