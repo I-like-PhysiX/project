@@ -20,4 +20,4 @@ Installation guide step by step
 
 7.) delete the components directory in the project directory, copy the necessary code to the right place
 
-8.) terminal: npm run serve
+8.) terminal: npm run dev
