@@ -1,6 +1,5 @@
 <template>
-  <div style="font-family: courier" id ="app">
-    <div class="content">
+  <div id ="app">
     <b-navbar toggleable="md" variant="dark" sticky>
       <b-navbar-toggle target="nav_collapse" :disabled="csakkosar"></b-navbar-toggle>
       <template>
@@ -85,6 +84,7 @@
                         invalid-feedback="Kötelező kitölteni!">
             <b-form-input
                           ref="input5"
+                          placeholder="példa@email.com"
                           type="email"
                           id="pop5"
                           size="sm"
@@ -110,25 +110,27 @@
     </div>
     </template>
     <b-collapse is-nav id="nav_collapse">
-      <b-navbar-nav class="ml-auto">
-        <b-nav-form>
-          <select id="selecttype" v-model="selected" v-on:click="szur()" size="sm">
-            <option value="">Termékfajták</option>
-          </select>
-          &nbsp;
-          <select name="sortBy" id="sortBy" v-on:click="szur()" v-model="sortType" size="sm">
-            <option v-for="item in sortOptions" :value="item.value">{{item.text}}</option>
-          </select>
-          &nbsp;
-          <input
-                   size="sm"
-                   class="mr-sm-2"
-                   type="text"
-                   v-model="search"
-                   @input="szur()"
-                   placeholder="Keresés"/>
-          &nbsp;
-        </b-nav-form>
+      <b-navbar-nav class="ml-auto" style="margin: 0 10px;">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active" style="margin: 10px 5px;">
+            <select id="selecttype" v-model="selected" v-on:click="szur()" class="form-control input-sm">
+              <option value="">Termékfajták</option>
+            </select>
+          </li>
+          <li class="nav-item active" style="margin: 10px 5px;">
+            <select name="sortBy" id="sortBy" v-on:click="szur()" v-model="sortType" class="form-control input-sm">
+              <option v-for="item in sortOptions" :value="item.value">{{item.text}}</option>
+            </select>
+          </li>
+          <li class="nav-item active" style="margin: 10px 5px;">
+            <input
+                     class="mr-sm-2 form-control input-sm"
+                     type="text"
+                     v-model="search"
+                     @input="szur()"
+                     placeholder="Keresés"/>
+          </li>
+        </ul>
        </b-navbar-nav>
      </b-collapse>
    </b-navbar>
@@ -186,7 +188,13 @@
                 style="padding: 20px 0; margin-top: 10px;"/>
       </b-card>
     </b-card-group>
-    </div>
+
+    <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)">
+    <span v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)">
+      {{elem.id}}
+    </span>
+  </div>
+
   </div>
 </template>
 
@@ -217,16 +225,17 @@ export default {
           { text: 'abc szerint', value: 'termek' },
           { text: 'ár szerint', value: 'egysar' }
        ],
+      itemsPerRow: 4,
       tomb: [
         {id:1, type: "gyümölcs", termek: "Alma, gála", egysar:310, egys:'kg', alap:0, ossz:50, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:1, type: "gyümölcs", termek: "Alma, golden", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:1, type: "gyümölcs", termek: "Alma, jonatán", egysar:290, egys:'kg', alap:0, ossz:100, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:1, type: "gyümölcs", termek: "Körte, vilmos", egysar:550, egys:'kg', alap:0, ossz:100, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
-        {id:1, type: "gyümölcs", termek: "Narancs, lédig", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/YM/OY/MY-23950624/fresh-oranges-250x250.jpg'},
-        {id:1, type: "gyümölcs", termek: "Banán, lédig", egysar:350, egys:'kg', alap:0, ossz:50, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
-        {id:1, type: "gyümölcs", termek: "Eper, magyar", egysar:600, egys:'kg', alap:0, ossz:100, url: 'http://iconshow.me/media/images/food/Fruit-Salad-icons/png/256/strawberry.png'},
-        {id:1, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", egysar:250, egys:'doboz', alap:0, ossz:100, url: 'https://s11284.pcdn.co/wp-content/uploads/2017/06/Breakstones-sour-cream.jpg'},
-        {id:1, type: "tejtermék", termek: "Tejföl, Riska, 250g", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://s11284.pcdn.co/wp-content/uploads/2017/06/Breakstones-sour-cream.jpg'}
+        {id:2, type: "gyümölcs", termek: "Alma, golden", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:3, type: "gyümölcs", termek: "Alma, jonatán", egysar:290, egys:'kg', alap:0, ossz:100, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:4, type: "gyümölcs", termek: "Körte, vilmos", egysar:550, egys:'kg', alap:0, ossz:100, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
+        {id:5, type: "gyümölcs", termek: "Narancs, lédig", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/YM/OY/MY-23950624/fresh-oranges-250x250.jpg'},
+        {id:6, type: "gyümölcs", termek: "Banán, lédig", egysar:350, egys:'kg', alap:0, ossz:50, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
+        {id:7, type: "gyümölcs", termek: "Eper, magyar", egysar:600, egys:'kg', alap:0, ossz:100, url: 'http://iconshow.me/media/images/food/Fruit-Salad-icons/png/256/strawberry.png'},
+        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", egysar:250, egys:'doboz', alap:0, ossz:100, url: 'https://s11284.pcdn.co/wp-content/uploads/2017/06/Breakstones-sour-cream.jpg'},
+        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://s11284.pcdn.co/wp-content/uploads/2017/06/Breakstones-sour-cream.jpg'}
       ]
     }
   },
@@ -355,6 +364,9 @@ export default {
 </script>
 
 <style scoped>
+ #app{
+  font-family: courier;
+ }
  #shapp {
    margin:30px;
    font-family: courier;
@@ -368,4 +380,11 @@ export default {
   border-style:ridge;
   border-color:#4285F4
 }
+
+.row {
+  border: solid 1px #404040;
+  padding: 10px;
+  margin:30px;
+}
+
 </style>
