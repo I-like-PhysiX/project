@@ -110,13 +110,13 @@
       <b-navbar-nav class="ml-auto">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <select id="selecttype" v-model="selected" v-on:click="szur()" class="form-control input-sm">
-              <option value="">Termékfajták</option>
+            <select id="selecttype" v-model="selected" v-on:change="szur()" class="form-control input-sm">
+              <option value="" disabled>Termékfajták</option>
             </select>
           </li>
           <li class="nav-item active">
-            <select name="sortBy" id="sortBy" v-on:click="szur()" v-model="sortType" class="form-control input-sm">
-              <option v-for="item in sortOptions" :value="item.value">{{item.text}}</option>
+            <select name="sortBy" id="sortBy" v-on:change="szur()" v-model="sortType" class="form-control input-sm">
+              <option v-for="item in sortOptions" :value="item.value" :disabled="item.isdisabled">{{item.text}}</option>
             </select>
           </li>
           <li class="nav-item active">
@@ -152,7 +152,9 @@
               :img-src="elem.url"
               style="max-width: 274px;"
               img-alt="A termék képe"
-              img-top>
+              img-top
+              class="image">
+       <div class="top-right"><h3 style="color: red;">{{elem.info}}</h3></div>
        <p class="card-text"><p>{{elem.termek}}</p> <p>{{elem.egysar}} Ft/{{elem.egys}}</p></p>
        <p class="card-text" v-if="elem.ossz > 0">Raktáron</p>
        <p class="card-text" v-else>Elfogyott</p>
@@ -211,21 +213,21 @@ export default {
       selected: '',
       sortType: '',
       sortOptions: [
-          { text: 'Rendezés', value: '' },
-          { text: 'abc szerint', value: 'termek' },
-          { text: 'ár szerint', value: 'egysar' }
+          { text: 'Rendezés', value: '', isdisabled: true},
+          { text: 'abc szerint', value: 'termek', isdisabled: false},
+          { text: 'ár szerint', value: 'egysar', isdisabled: false}
        ],
       itemsPerRow: 1,
       tomb: [
-        {id:1, type: "gyümölcs", termek: "Alma, gála", egysar:310, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:2, type: "gyümölcs", termek: "Alma, golden", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:3, type: "gyümölcs", termek: "Alma, jonatán", egysar:290, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:4, type: "gyümölcs", termek: "Körte, vilmos", egysar:550, egys:'kg', alap:0, ossz:10, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
-        {id:5, type: "gyümölcs", termek: "Narancs, lédig", egysar:350, egys:'kg', alap:0, ossz:0, url: 'http://images6.fanpop.com/image/photos/34500000/Orange-Fruit-orange-34512935-600-600.png'},
-        {id:6, type: "gyümölcs", termek: "Banán, lédig", egysar:350, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
-        {id:7, type: "gyümölcs", termek: "Eper, magyar", egysar:600, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
-        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", egysar:250, egys:'doboz', alap:0, ossz:10, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
-        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
+        {id:1, type: "gyümölcs", termek: "Alma, gála", info: "Akció!", egysar:310, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:2, type: "gyümölcs", termek: "Alma, golden", info: "", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:3, type: "gyümölcs", termek: "Alma, jonatán", info: "", egysar:290, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:4, type: "gyümölcs", termek: "Körte, vilmos", info: "", egysar:550, egys:'kg', alap:0, ossz:10, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
+        {id:5, type: "gyümölcs", termek: "Narancs, lédig", info: "Akció!", egysar:350, egys:'kg', alap:0, ossz:0, url: 'http://images6.fanpop.com/image/photos/34500000/Orange-Fruit-orange-34512935-600-600.png'},
+        {id:6, type: "gyümölcs", termek: "Banán, lédig", info: "", egysar:350, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
+        {id:7, type: "gyümölcs", termek: "Eper, magyar", info: "Akció!", egysar:600, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
+        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", info: "", egysar:250, egys:'doboz', alap:0, ossz:10, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
+        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", info: "Akció!", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
       ]
     }
   },
@@ -293,6 +295,7 @@ export default {
         console.log('Make API request');
         this.onReset();
         this.showModal();
+        this.mounted();
       }
     },
     onShow () {
@@ -349,6 +352,10 @@ export default {
   },
   mounted() {
     this.create_selection();
+    this.itemsPerRow=this.szurttomb.length;
+    let szurttomb = this.tomb.filter(v => v.info=="Akció!");
+    this.szurttomb=szurttomb;
+    this.itemsPerRow=this.szurttomb.length;
   },
   computed: {
     osszeg() {
@@ -374,5 +381,13 @@ export default {
   border-width:1px;
   border-style:ridge;
   border-color:#4285F4;
+}
+.image {
+    position: relative;
+}
+.top-right {
+    position: absolute;
+    top: 8px;
+    right: 16px;
 }
 </style>
