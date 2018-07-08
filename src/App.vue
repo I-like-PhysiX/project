@@ -3,7 +3,7 @@
     <b-navbar toggleable="md" variant="dark" sticky>
       <b-navbar-toggle target="nav_collapse" :disabled="csakkosar"></b-navbar-toggle>
       <template>
-        <div id="myContainer" style="margin-left: 10px;">
+        <div id="myContainer">
            <div class="my-3">
              <!-- our triggering (target) element -->
              <b-btn
@@ -13,8 +13,9 @@
                     @click="search='', csakkosar=true"
                     size="md"
                     variant="dark"
-                    style="margin-left: 0px;">
-                    Kosár
+                    style="text-align: center"
+                    >
+                    {{this.rendeles.length}} tétel
               </b-btn>
            </div>
           <!-- Our popover title and content render container -->
@@ -90,20 +91,16 @@
                           size="sm"
                           v-model="input5"/>
           </b-form-group>
-          <b-alert show class="small">
-            <strong>A kosárba helyezett termékek:</strong>
-            <br>
-            <br>
-            <p style="color: red" v-if="rendeles==0">A kosár üres!</p>
-            <div v-else show v-for="elem in rendeles" :key="elem.id">
-              <p><b-button @click="remove(elem)">DEL</b-button>&nbsp;&nbsp;&nbsp;{{elem.termek}}</p>
+          <b-alert show class="small" style="overflow: auto; height: 188px; width: 215px;">
+            <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
+            <div v-else show v-for="elem in rendeles">
+              <p><b-button @click="remove(elem)" style="margin-right: 15px;">x</b-button>{{elem.termek}}</p>
             </div>
           </b-alert>
           <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
           <br>
           <br>
-          <b-btn @click="onClose" size="sm" variant="danger">Kosár kiürítése</b-btn>
-          &nbsp;
+          <b-btn @click="onClose" size="sm" variant="danger" style="margin-right: 35px;">Kosár kiürítése</b-btn>
           <b-btn @click="onOk" size="sm" variant="success">Vásárlás</b-btn>
         </div>
       </b-popover>
@@ -111,18 +108,18 @@
     </template>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav class="ml-auto">
-        <ul class="navbar-nav mr-auto" style="margin-left: 0px; margin-right: 20px;">
-          <li class="nav-item active" style="margin: 10px 5px;">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
             <select id="selecttype" v-model="selected" v-on:click="szur()" class="form-control input-sm">
               <option value="">Termékfajták</option>
             </select>
           </li>
-          <li class="nav-item active" style="margin: 10px 5px;">
+          <li class="nav-item active">
             <select name="sortBy" id="sortBy" v-on:click="szur()" v-model="sortType" class="form-control input-sm">
               <option v-for="item in sortOptions" :value="item.value">{{item.text}}</option>
             </select>
           </li>
-          <li class="nav-item active" style="margin-left: 5px; margin-right: 20px; margin-top: 10px; margin-bottom: 10px;">
+          <li class="nav-item active">
             <input
                      class="mr-sm-2 form-control input-sm"
                      type="text"
@@ -134,8 +131,7 @@
        </b-navbar-nav>
      </b-collapse>
    </b-navbar>
-    <br>
-    <p style="text-align:center;">Elérhető termékek</p>
+    <div style="text-align:center; margin: 15px auto;">Elérhető termékek</div>
     <b-modal ref="myModalRef" hide-footer title="Bevásárló alkalmazás">
       <div class="d-block text-center">
         <h3>Köszönjük a vásárlást!</h3>
@@ -146,14 +142,15 @@
              block
              @click="hideModal">Bezárás</b-btn>
     </b-modal>
-    <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)" style="margin-left: 5px; font-family: courier;">
+    <div class="container">
+    <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)">
       <b-card
               bg-variant="light"
               id="card"
               footer-bg-variant="secondary"
               show v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
               :img-src="elem.url"
-              style="margin:0,10px; margin-bottom: 50px; max-width: 288px;"
+              style="max-width: 274px;"
               img-alt="A termék képe"
               img-top>
        <p class="card-text"><p>{{elem.termek}}</p> <p>{{elem.egysar}} Ft/{{elem.egys}}</p></p>
@@ -188,6 +185,7 @@
       </b-card>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -217,16 +215,16 @@ export default {
           { text: 'abc szerint', value: 'termek' },
           { text: 'ár szerint', value: 'egysar' }
        ],
-      itemsPerRow: 5,
+      itemsPerRow: 1,
       tomb: [
-        {id:1, type: "gyümölcs", termek: "Alma, gála", egysar:310, egys:'kg', alap:0, ossz:50, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:1, type: "gyümölcs", termek: "Alma, gála", egysar:310, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
         {id:2, type: "gyümölcs", termek: "Alma, golden", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:3, type: "gyümölcs", termek: "Alma, jonatán", egysar:290, egys:'kg', alap:0, ossz:100, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:4, type: "gyümölcs", termek: "Körte, vilmos", egysar:550, egys:'kg', alap:0, ossz:100, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
+        {id:3, type: "gyümölcs", termek: "Alma, jonatán", egysar:290, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:4, type: "gyümölcs", termek: "Körte, vilmos", egysar:550, egys:'kg', alap:0, ossz:10, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
         {id:5, type: "gyümölcs", termek: "Narancs, lédig", egysar:350, egys:'kg', alap:0, ossz:0, url: 'http://images6.fanpop.com/image/photos/34500000/Orange-Fruit-orange-34512935-600-600.png'},
-        {id:6, type: "gyümölcs", termek: "Banán, lédig", egysar:350, egys:'kg', alap:0, ossz:50, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
-        {id:7, type: "gyümölcs", termek: "Eper, magyar", egysar:600, egys:'kg', alap:0, ossz:100, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
-        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", egysar:250, egys:'doboz', alap:0, ossz:100, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
+        {id:6, type: "gyümölcs", termek: "Banán, lédig", egysar:350, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
+        {id:7, type: "gyümölcs", termek: "Eper, magyar", egysar:600, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
+        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", egysar:250, egys:'doboz', alap:0, ossz:10, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
         {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
       ]
     }
@@ -254,6 +252,9 @@ export default {
      }
    },
   methods: {
+    clear(){
+      this.rendeles.splice(0, this.rendeles.length);
+    },
     create_selection () {
       let tomb2=[];
       this.tomb.forEach(v => tomb2.push(v.type));
@@ -279,7 +280,8 @@ export default {
       console.log('Quit cart');
     },
     onClose () {
-      this.onReset();
+      this.rendeles.forEach(v => v.alap=0);
+      this.clear();
       console.log('Reset cart');
     },
     onOk () {
@@ -338,6 +340,7 @@ export default {
               break;
             };
         this.szurttomb=szurttomb;
+        this.itemsPerRow=this.szurttomb.length;
       },
       szur2(){
         let rendeles=this.tomb.filter(v => v.alap!=0)
@@ -365,14 +368,11 @@ export default {
 #card:hover{
   border-width:1px;
   border-style:ridge;
-  border-color:#4285F4
+  border-color:#4285F4;
 }
-#card{
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 20px;
-  margin-right: 20px;
-  font-family: courier;
+#exPopoverReactive1:hover{
+  border-width:1px;
+  border-style:ridge;
+  border-color:#4285F4;
 }
-
 </style>
