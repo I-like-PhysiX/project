@@ -5,18 +5,27 @@
       <template>
         <div id="myContainer">
            <div class="my-3">
+             <b-button-group>
+             <b-btn
+                     class="exPopoverReactive1"
+                     size="md"
+                     variant="dark"
+                     style="text-align: center">
+                     Fiókom
+             </b-btn>
              <!-- our triggering (target) element -->
              <b-btn
+                    class="exPopoverReactive1"
                     id="exPopoverReactive1"
                     ref="button"
                     :disabled="popoverShow"
                     @click="search='', csakkosar=true"
                     size="md"
                     variant="dark"
-                    style="text-align: center"
-                    >
+                    style="text-align: center">
                     {{this.rendeles.length}} tétel
               </b-btn>
+              </b-button-group>
            </div>
           <!-- Our popover title and content render container -->
           <!-- We use placement 'auto' so popover fits in the best spot on viewport -->
@@ -108,7 +117,7 @@
     </template>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav class="ml-auto">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-auto" style="margin-top: 15px;">
           <li class="nav-item active">
             <select id="selecttype" v-model="selected" v-on:change="szur()" class="form-control input-sm">
               <option value="" disabled>Termékfajták</option>
@@ -120,12 +129,28 @@
             </select>
           </li>
           <li class="nav-item active">
-            <input
-                     class="mr-sm-2 form-control input-sm"
-                     type="text"
-                     v-model="search"
-                     @input="szur()"
-                     placeholder="Keresés"/>
+            <b-form-group
+                          label-for="search"
+                          :state="searchstate">
+              <b-form-input
+                            class="form-control"
+                            size="md"
+                            ref="search"
+                            placeholder="Keresés"
+                            type="text"
+                            id="search"
+                            v-model="search"/>
+            </b-form-group>
+          </li>
+          <li class="nav-item active">
+            <b-btn
+                          class="exPopoverReactive1"
+                          @click="szur3(), search=''"
+                          size="md"
+                          variant="dark"
+                          style="text-align: center">
+                          Keresés
+            </b-btn>
           </li>
         </ul>
        </b-navbar-nav>
@@ -198,6 +223,7 @@ export default {
       name: 'shlist',
       show: true,
       search:'',
+      searchstate: null,
       mid: 1,
       input1: '',
       input1state: null,
@@ -251,16 +277,28 @@ export default {
        if (val) {
          this.input5state = true;
        }
+     },
+     search (val) {
+       if (val) {
+         this.searchstate = true;
+       }
      }
    },
   methods: {
+    init(){
+      this.itemsPerRow=this.szurttomb.length;
+      let szurttomb = this.tomb.filter(v => v.info=="Akció!");
+      this.szurttomb=szurttomb;
+      this.itemsPerRow=this.szurttomb.length;
+      console.log("init");
+    },
     clear(){
-      this.rendeles.splice(0, this.rendeles.length);
+      this.rendeles=[];
     },
     create_selection () {
-      let tomb2=[];
-      this.tomb.forEach(v => tomb2.push(v.type));
-      let myArray = Array.from(new Set(tomb2));
+      let mySet = new Set();
+      this.tomb.forEach(v => mySet.add(v.type));
+      let myArray = Array.from(mySet);
       let dropdown = document.getElementById("selecttype");
       for (var i = 0; i < myArray.length; ++i) {
         dropdown[dropdown.length] = new Option(myArray[i], myArray[i])};
@@ -274,6 +312,7 @@ export default {
     },
     hideModal () {
       this.$refs.myModalRef.hide()
+      this.init();
     },
     onCancel(){
       this.search='';
@@ -295,7 +334,6 @@ export default {
         console.log('Make API request');
         this.onReset();
         this.showModal();
-        this.mounted();
       }
     },
     onShow () {
@@ -333,7 +371,7 @@ export default {
       console.log('Reset values');
     },
     szur () {
-      let szurttomb = this.tomb.filter(v => v.type==this.selected).filter(v => RegExp(this.search,'i').test(v.termek)).slice(0,9);
+      let szurttomb = this.tomb.filter(v => v.type==this.selected);
       switch (this.sortType) {
           case 'termek':
           szurttomb=szurttomb.sort((a,b) => a.termek > b.termek);
@@ -346,16 +384,21 @@ export default {
         this.itemsPerRow=this.szurttomb.length;
       },
       szur2(){
-        let rendeles=this.tomb.filter(v => v.alap!=0)
+        let rendeles=this.tomb.filter(v => v.alap!=0);
         this.rendeles=rendeles;
+      },
+      szur3(){
+        if (!this.search) { this.input5state = false; }
+        if (this.search){
+          let szurttomb =this.tomb.filter(v => RegExp(this.search,'i').test(v.termek)).slice(0,9);
+          this.szurttomb=szurttomb;
+          this.itemsPerRow=this.szurttomb.length;
+        }
       }
   },
   mounted() {
     this.create_selection();
-    this.itemsPerRow=this.szurttomb.length;
-    let szurttomb = this.tomb.filter(v => v.info=="Akció!");
-    this.szurttomb=szurttomb;
-    this.itemsPerRow=this.szurttomb.length;
+    this.init();
   },
   computed: {
     osszeg() {
@@ -377,10 +420,10 @@ export default {
   border-style:ridge;
   border-color:#4285F4;
 }
-#exPopoverReactive1:hover{
+.exPopoverReactive1:hover{
   border-width:1px;
   border-style:ridge;
-  border-color:#4285F4;
+  border-color:#FFFFFF;
 }
 .image {
     position: relative;
