@@ -6,13 +6,14 @@
         <div id="myContainer">
            <div class="my-3">
              <b-button-group>
-             <b-btn
-                     class="exPopoverReactive1"
-                     size="md"
-                     variant="dark"
-                     style="text-align: center">
-                     Fiókom
-             </b-btn>
+               <b-btn
+                       class="exPopoverReactive1"
+                       size="md"
+                       variant="dark"
+                       style="text-align: center"
+                       @click="init(), search='', sortType='', selected=''">
+                       Webshop
+               </b-btn>
              <!-- our triggering (target) element -->
              <b-btn
                     class="exPopoverReactive1"
@@ -102,7 +103,7 @@
           </b-form-group>
           <b-alert show class="small" style="overflow: auto; height: 188px; width: 215px;">
             <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
-            <div v-else show v-for="elem in rendeles">
+            <div v-else show v-for="elem in rendeles" :key="elem.id">
               <p><b-button @click="remove(elem)" style="margin-right: 15px;">x</b-button>{{elem.termek}}</p>
             </div>
           </b-alert>
@@ -157,6 +158,7 @@
      </b-collapse>
    </b-navbar>
     <div style="text-align:center; margin: 15px auto;">Elérhető termékek</div>
+    <div class="main">
     <b-modal ref="myModalRef" hide-footer title="Bevásárló alkalmazás">
       <div class="d-block text-center">
         <h3>Köszönjük a vásárlást!</h3>
@@ -174,6 +176,7 @@
               id="card"
               footer-bg-variant="secondary"
               show v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
+              :key="elem.id"
               :img-src="elem.url"
               style="max-width: 274px;"
               img-alt="A termék képe"
@@ -212,7 +215,17 @@
       </b-card>
     </div>
   </div>
+</div>
+<div class="text-mid">
+  <div class="center">
   </div>
+</div>
+<b-navbar toggleable="md" variant="dark" class="bottom">
+  <div class="footer" style="color:white;  margin: 0px auto;">
+    © 2018. All Rights Reserved
+  </div>
+</b-navbar>
+</div>
 </template>
 
 <script>
@@ -411,7 +424,32 @@ export default {
 <style scoped>
  #app{
   font-family: courier;
+  box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    margin: 0 auto;
+    min-height: 100vh;
  }
+ .main{
+  width:100%;
+  overflow:hidden;
+}
+.bottom,.text-mid {
+  padding:20px 10px;
+  height:100%;
+
+}
+.text-mid {
+  margin-top: auto;
+  background:white;
+}
  .form-control {
     display: inline-block;
 }
