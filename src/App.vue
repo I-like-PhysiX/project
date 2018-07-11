@@ -187,31 +187,24 @@
        <p class="card-text" v-if="elem.ossz > 0">Raktáron</p>
        <p class="card-text" v-else>Elfogyott</p>
        <p class="card-text"><b> <p>Mennyiség: {{elem.alap}} {{elem.egys}}</p> <p>Ár: {{Math.round(elem.alap*elem.egysar)}} Ft</p></b></p>
-       <b-input
-                class="form-control input-md text-center"
-                :disabled="elem.ossz === 0 ? true : false"
-                v-model="elem.alap"
-                @input="szur2()"
-                min="0"
-                :max="elem.ossz"
-                v-if="elem.egys=='kg'"
-                step="0.2"
-                size="md"
-                type="range"
-                id="myNumber"
-                style="padding: 20px 0; margin-top: 0px;"/>
-        <b-input
-                class="form-control input-md text-center"
-                :disabled="elem.ossz === 0 ? true : false"
-                v-if="elem.egys!='kg'"
-                v-model="elem.alap"
-                @input="szur2()"
-                min="0"
-                :max="elem.ossz"
-                step="1"
-                type="range"
-                size="md"
-                style="padding: 20px 0; margin-top: 0px;"/>
+
+        <div
+             disabled="elem.ossz === 0 ? true : false"
+             v-if="elem.egys=='kg'"
+             v-model="elem.alap">
+          <button @click="decrement(elem, 0.2), szur2()">-</button>
+          {{ elem.alap }}
+          <button @click="increment(elem, 0.2), szur2()">+</button>
+        </div>
+        <div
+             disabled="elem.ossz === 0 ? true : false"
+             v-if="elem.egys!='kg'"
+             v-model="elem.alap">
+          <button @click="decrement(elem, 1), szur2()">-</button>
+          {{ elem.alap }}
+          <button @click="increment(elem, 1), szur2()">+</button>
+        </div>
+
       </b-card>
     </div>
   </div>
@@ -298,6 +291,16 @@ export default {
      }
    },
   methods: {
+    increment (elem, step) {
+      if(elem.alap < elem.ossz){
+      elem.alap+=step;
+    }
+    },
+    decrement (elem, step) {
+      if(elem.alap > 0){
+        elem.alap-=step ;
+      }
+    },
     init(){
       this.itemsPerRow=this.szurttomb.length;
       let szurttomb = this.tomb.filter(v => v.info=="Akció!");
