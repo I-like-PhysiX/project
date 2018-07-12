@@ -104,7 +104,25 @@
           <b-alert show class="small" style="overflow: auto; height: 188px; width: 215px;">
             <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
             <div v-else show v-for="elem in rendeles" :key="elem.id">
-              <p><b-button @click="remove(elem)" style="margin-right: 15px;">x</b-button>{{elem.termek}}</p>
+              <p>
+                <b-button @click="remove(elem)" style="margin-right: 15px;">x</b-button>
+                {{elem.termek}}
+                <div
+                     disabled="elem.ossz === 0 ? true : false"
+                     v-if="elem.egys=='kg'"
+                     v-model="elem.alap">
+                     <b-button @click="decrement(elem, 0.2), szur2()">-</b-button>
+                     <b-button @click="increment(elem, 0.2), szur2()">+</b-button>
+                </div>
+                <div
+                     disabled="elem.ossz === 0 ? true : false"
+                     v-if="elem.egys!='kg'"
+                     v-model="elem.alap">
+                     <b-button @click="decrement(elem, 1), szur2()">-</b-button>
+                     <b-button @click="increment(elem, 1), szur2()">+</b-button>
+                </div>
+                <p class="card-text"><b> <p>Mennyiség: {{elem.alap}} {{elem.egys}}</p> <p>Ár: {{Math.round(elem.alap*elem.egysar)}} Ft</p></b></p>
+              </p>
             </div>
           </b-alert>
           <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
@@ -186,25 +204,18 @@
        <p class="card-text"><p>{{elem.termek}}</p> <p>{{elem.egysar}} Ft/{{elem.egys}}</p></p>
        <p class="card-text" v-if="elem.ossz > 0">Raktáron</p>
        <p class="card-text" v-else>Elfogyott</p>
-       <p class="card-text"><b> <p>Mennyiség: {{elem.alap}} {{elem.egys}}</p> <p>Ár: {{Math.round(elem.alap*elem.egysar)}} Ft</p></b></p>
-
-        <div
-             disabled="elem.ossz === 0 ? true : false"
-             v-if="elem.egys=='kg'"
-             v-model="elem.alap">
-          <button @click="decrement(elem, 0.2), szur2()">-</button>
-          {{ elem.alap }}
-          <button @click="increment(elem, 0.2), szur2()">+</button>
-        </div>
-        <div
-             disabled="elem.ossz === 0 ? true : false"
-             v-if="elem.egys!='kg'"
-             v-model="elem.alap">
-          <button @click="decrement(elem, 1), szur2()">-</button>
-          {{ elem.alap }}
-          <button @click="increment(elem, 1), szur2()">+</button>
-        </div>
-
+       <div
+            disabled="elem.ossz === 0 ? true : false"
+            v-if="elem.egys=='kg'"
+            v-model="elem.alap">
+            <b-button @click="increment(elem, 0.2), szur2()">Kosárba</b-button>
+       </div>
+       <div
+            disabled="elem.ossz === 0 ? true : false"
+            v-if="elem.egys!='kg'"
+            v-model="elem.alap">
+            <b-button @click="increment(elem, 1), szur2()">Kosárba</b-button>
+       </div>
       </b-card>
     </div>
   </div>
@@ -291,14 +302,14 @@ export default {
      }
    },
   methods: {
-    increment (elem, step) {
-      if(elem.alap < elem.ossz){
-      elem.alap+=step;
-    }
+    increment(elem, step) {
+      if (elem.alap < elem.ossz) {
+        elem.alap = Math.round((elem.alap + step) * 10) / 10;
+      }
     },
-    decrement (elem, step) {
-      if(elem.alap > 0){
-        elem.alap-=step ;
+    decrement(elem, step) {
+      if (elem.alap > 0) {
+        elem.alap = Math.round((elem.alap - step) * 10) / 10;
       }
     },
     init(){
@@ -404,8 +415,10 @@ export default {
         this.rendeles=rendeles;
       },
       szur3(){
-        if (!this.search) { this.input5state = false; }
-        if (this.search){
+        if (!this.search) {
+          this.input5state = false;
+        }
+        else {
           let szurttomb =this.tomb.filter(v => RegExp(this.search,'i').test(v.termek)).slice(0,9);
           this.szurttomb=szurttomb;
           this.itemsPerRow=this.szurttomb.length;
@@ -447,7 +460,6 @@ export default {
 .bottom,.text-mid {
   padding:20px 10px;
   height:100%;
-
 }
 .text-mid {
   margin-top: auto;
