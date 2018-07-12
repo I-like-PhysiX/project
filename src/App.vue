@@ -101,7 +101,7 @@
                           size="sm"
                           v-model="input5"/>
           </b-form-group>
-          <b-alert show class="small" style="overflow: auto; height: 160px; width: 350px; background-color: #F5F5F5;">
+          <b-alert show class="small" style="overflow: auto; height: 167px; width: 400px; background-color: #F5F5F5;">
             <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
             <table v-else show border="1|0">
               <thead>
