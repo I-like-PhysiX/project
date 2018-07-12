@@ -101,14 +101,14 @@
                           size="sm"
                           v-model="input5"/>
           </b-form-group>
-          <b-alert show class="small" style="overflow: auto; height: 167px; width: 400px; background-color: #F5F5F5;">
+          <b-alert show class="small" style="overflow: auto; height: 170px; width: 420px; background-color: #F5F5F5;">
             <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
-            <table v-else show border="1|0">
+            <table v-else show>
               <thead>
                 <tr>
-                  <td>Termék neve</td>
-                  <td>Mennyiség</td>
-                  <td>Részösszeg</td>
+                  <td><strong>Termék neve</strong></td>
+                  <td><strong>Mennyiség</strong></td>
+                  <td><strong>Részösszeg</strong></td>
                 </tr>
               </thead>
               <tbody>
@@ -222,7 +222,7 @@
             disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys=='kg'"
             v-model="elem.alap">
-            <b-button @click="increment(elem, 0.2), szur2()">Kosárba</b-button>
+            <b-button @click="increment(elem, 0.1), szur2()">Kosárba</b-button>
        </div>
        <div
             disabled="elem.ossz === 0 ? true : false"
@@ -322,9 +322,7 @@ export default {
       }
     },
     decrement(elem, step) {
-      if (elem.alap > 0) {
         elem.alap = Math.round((elem.alap - step) * 10) / 10;
-      }
     },
     init(){
       this.itemsPerRow=this.szurttomb.length;
@@ -500,4 +498,16 @@ export default {
     top: 8px;
     right: 16px;
 }
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {background-color:#f5f5f5;}
 </style>
