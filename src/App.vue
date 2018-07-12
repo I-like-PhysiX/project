@@ -101,29 +101,43 @@
                           size="sm"
                           v-model="input5"/>
           </b-form-group>
-          <b-alert show class="small" style="overflow: auto; height: 188px; width: 215px;">
+          <b-alert show class="small" style="overflow: auto; height: 160px; width: 350px; background-color: #F5F5F5;">
             <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
-            <div v-else show v-for="elem in rendeles" :key="elem.id">
-              <p>
-                <b-button @click="remove(elem)" style="margin-right: 15px;">x</b-button>
-                {{elem.termek}}
-                <div
-                     disabled="elem.ossz === 0 ? true : false"
-                     v-if="elem.egys=='kg'"
-                     v-model="elem.alap">
-                     <b-button @click="decrement(elem, 0.2), szur2()">-</b-button>
-                     <b-button @click="increment(elem, 0.2), szur2()">+</b-button>
-                </div>
-                <div
-                     disabled="elem.ossz === 0 ? true : false"
-                     v-if="elem.egys!='kg'"
-                     v-model="elem.alap">
-                     <b-button @click="decrement(elem, 1), szur2()">-</b-button>
-                     <b-button @click="increment(elem, 1), szur2()">+</b-button>
-                </div>
-                <p class="card-text"><b> <p>Mennyiség: {{elem.alap}} {{elem.egys}}</p> <p>Ár: {{Math.round(elem.alap*elem.egysar)}} Ft</p></b></p>
-              </p>
-            </div>
+            <table v-else show border="1|0">
+              <thead>
+                <tr>
+                  <td>Termék neve</td>
+                  <td>Mennyiség</td>
+                  <td>Részösszeg</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="elem in rendeles" :key="elem.id">
+                  <td>{{ elem.termek }}</td>
+                  <td>
+                    <div
+                         disabled="elem.ossz === 0 ? true : false"
+                         v-if="elem.egys=='kg'"
+                         v-model="elem.alap">
+                         <b-button @click="decrement(elem, 0.1), szur2()">-</b-button>
+                         {{elem.alap}} {{elem.egys}}
+                         <b-button @click="increment(elem, 0.1), szur2()">+</b-button>
+                    </div>
+                    <div
+                         disabled="elem.ossz === 0 ? true : false"
+                         v-if="elem.egys!='kg'"
+                         v-model="elem.alap">
+                         <b-button @click="decrement(elem, 1), szur2()">-</b-button>
+                         {{elem.alap}} {{elem.egys}}
+                         <b-button @click="increment(elem, 1), szur2()">+</b-button>
+                    </div>
+                  </td>
+                  <td>
+                    {{Math.round(elem.alap*elem.egysar)}} Ft <b-button @click="remove(elem)">x</b-button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </b-alert>
           <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
           <br>
@@ -317,6 +331,7 @@ export default {
       let szurttomb = this.tomb.filter(v => v.info=="Akció!");
       this.szurttomb=szurttomb;
       this.itemsPerRow=this.szurttomb.length;
+      this.onCancel();
       console.log("init");
     },
     clear(){
@@ -417,8 +432,7 @@ export default {
       szur3(){
         if (!this.search) {
           this.input5state = false;
-        }
-        else {
+        }else {
           let szurttomb =this.tomb.filter(v => RegExp(this.search,'i').test(v.termek)).slice(0,9);
           this.szurttomb=szurttomb;
           this.itemsPerRow=this.szurttomb.length;
