@@ -11,7 +11,7 @@
                        size="md"
                        variant="dark"
                        style="text-align: center"
-                       @click="init(), search='', sortType='', selected=''">
+                       v-on:click="init(), search='', sortType='', selected=''">
                        Webshop
                </b-btn>
              <!-- our triggering (target) element -->
@@ -20,7 +20,7 @@
                     id="exPopoverReactive1"
                     ref="button"
                     :disabled="popoverShow"
-                    @click="search='', csakkosar=true"
+                    v-on:click="search='', csakkosar=true"
                     size="md"
                     variant="dark"
                     style="text-align: center">
@@ -42,7 +42,7 @@
                      @shown="onShown"
                      @hidden="onHidden">
           <template slot="title">
-          <b-btn @click="onCancel" class="close" aria-label="Close">
+          <b-btn v-on:click="onCancel" class="close" aria-label="Close">
             <span class="d-inline-block" aria-hidden="true">&times;</span>
           </b-btn>
           Kosár
@@ -103,7 +103,7 @@
           </b-form-group>
           <b-alert show class="small" style="overflow: auto; height: 170px; width: 420px; background-color: #F5F5F5;">
             <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
-            <table v-else show>
+            <table v-else>
               <thead>
                 <tr>
                   <td><strong>Termék neve</strong></td>
@@ -119,21 +119,21 @@
                          disabled="elem.ossz === 0 ? true : false"
                          v-if="elem.egys=='kg'"
                          v-model="elem.alap">
-                         <b-button @click="decrement(elem, 0.1), szur2()">-</b-button>
+                         <b-button v-on:click="removefromcart(elem, 0.1)">-</b-button>
                          {{elem.alap}} {{elem.egys}}
-                         <b-button @click="increment(elem, 0.1), szur2()">+</b-button>
+                         <b-button v-on:click="addtocart(elem, 0.1)">+</b-button>
                     </div>
                     <div
                          disabled="elem.ossz === 0 ? true : false"
                          v-if="elem.egys!='kg'"
                          v-model="elem.alap">
-                         <b-button @click="decrement(elem, 1), szur2()">-</b-button>
+                         <b-button v-on:click="removefromcart(elem, 1)">-</b-button>
                          {{elem.alap}} {{elem.egys}}
-                         <b-button @click="increment(elem, 1), szur2()">+</b-button>
+                         <b-button v-on:click="addtocart(elem, 1)">+</b-button>
                     </div>
                   </td>
                   <td>
-                    {{Math.round(elem.alap*elem.egysar)}} Ft <b-button @click="remove(elem)">x</b-button>
+                    {{Math.round(elem.alap*elem.egysar)}} Ft
                   </td>
                 </tr>
               </tbody>
@@ -142,8 +142,8 @@
           <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
           <br>
           <br>
-          <b-btn @click="onClose" size="sm" variant="danger" style="margin-right: 35px;">Kosár kiürítése</b-btn>
-          <b-btn @click="onOk" size="sm" variant="success">Vásárlás</b-btn>
+          <b-btn v-on:click="onClose" size="sm" variant="danger" style="margin-right: 35px;">Kosár kiürítése</b-btn>
+          <b-btn v-on:click="onOk" size="sm" variant="success">Vásárlás</b-btn>
         </div>
       </b-popover>
     </div>
@@ -178,7 +178,7 @@
           <li class="nav-item active">
             <b-btn
                           class="exPopoverReactive1"
-                          @click="szur3(), search=''"
+                          v-on:click="szur3(), search=''"
                           size="md"
                           variant="dark"
                           style="text-align: center">
@@ -199,7 +199,7 @@
              class="mt-3"
              variant="outline-danger"
              block
-             @click="hideModal">Bezárás</b-btn>
+             v-on:click="hideModal">Bezárás</b-btn>
     </b-modal>
     <div class="container">
     <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)">
@@ -222,13 +222,13 @@
             disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys=='kg'"
             v-model="elem.alap">
-            <b-button @click="increment(elem, 0.1), szur2()">Kosárba</b-button>
+            <b-button v-on:click="addtocart(elem, 0.1)">Kosárba</b-button>
        </div>
        <div
             disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys!='kg'"
             v-model="elem.alap">
-            <b-button @click="increment(elem, 1), szur2()">Kosárba</b-button>
+            <b-button v-on:click="addtocart(elem, 1)">Kosárba</b-button>
        </div>
       </b-card>
     </div>
@@ -316,13 +316,19 @@ export default {
      }
    },
   methods: {
-    increment(elem, step) {
+    addtocart(elem, step){
       if (elem.alap < elem.ossz) {
         elem.alap = Math.round((elem.alap + step) * 10) / 10;
+        let set = new Set();
+        set.add(elem);
+        this.rendeles=Array.from(set)
       }
     },
-    decrement(elem, step) {
-        elem.alap = Math.round((elem.alap - step) * 10) / 10;
+    removefromcart(elem, step){
+      elem.alap = Math.round((elem.alap - step) * 10) / 10;
+      if (elem.alap==0){
+        this.rendeles.splice(this.rendeles.indexOf(elem), 1);
+      }
     },
     init(){
       this.itemsPerRow=this.szurttomb.length;
@@ -332,9 +338,6 @@ export default {
       this.onCancel();
       console.log("init");
     },
-    clear(){
-      this.rendeles=[];
-    },
     create_selection () {
       let mySet = new Set();
       this.tomb.forEach(v => mySet.add(v.type));
@@ -342,10 +345,6 @@ export default {
       let dropdown = document.getElementById("selecttype");
       for (var i = 0; i < myArray.length; ++i) {
         dropdown[dropdown.length] = new Option(myArray[i], myArray[i])};
-    },
-    remove(elem) {
-      elem.alap=0;
-      this.rendeles.splice(this.rendeles.indexOf(elem), 1);
     },
     showModal () {
       this.$refs.myModalRef.show()
@@ -362,7 +361,7 @@ export default {
     },
     onClose () {
       this.rendeles.forEach(v => v.alap=0);
-      this.clear();
+      this.rendeles=[];
       console.log('Reset cart');
     },
     onOk () {
@@ -422,10 +421,6 @@ export default {
             };
         this.szurttomb=szurttomb;
         this.itemsPerRow=this.szurttomb.length;
-      },
-      szur2(){
-        let rendeles=this.tomb.filter(v => v.alap!=0);
-        this.rendeles=rendeles;
       },
       szur3(){
         if (!this.search) {
