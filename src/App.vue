@@ -32,6 +32,7 @@
           <!-- We use placement 'auto' so popover fits in the best spot on viewport -->
           <!-- We specify the same container as the trigger button, so that popover is close to button -->
           <b-popover
+
                      target="exPopoverReactive1"
                      triggers="click"
                      :show.sync="popoverShow"
@@ -129,10 +130,11 @@
                          v-model="elem.alap">
                          <b-button v-on:click="removefromcart(elem, 1)">-</b-button>
                          {{elem.alap}} {{elem.egys}}
-                         <b-button v-on:click="addtocart(elem, 1)">+</b-button>
+                         <b-button v-on:click="increment(elem, 1)">+</b-button>
                     </div>
                   </td>
                   <td>
+                    <b-button v-on:click="del(elem)">X</b-button>
                     {{Math.round(elem.alap*elem.egysar)}} Ft
                   </td>
                 </tr>
@@ -142,8 +144,10 @@
           <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
           <br>
           <br>
-          <b-btn v-on:click="onClose" size="sm" variant="danger" style="margin-right: 35px;">Kosár kiürítése</b-btn>
-          <b-btn v-on:click="onOk" size="sm" variant="success">Vásárlás</b-btn>
+          <b-button-group>
+            <b-btn v-on:click="onClose" size="sm" variant="danger">Kosár kiürítése</b-btn>
+            <b-btn v-on:click="onOk" size="sm" variant="success">Vásárlás</b-btn>
+          </b-button-group>
         </div>
       </b-popover>
     </div>
@@ -178,7 +182,7 @@
           <li class="nav-item active">
             <b-btn
                           class="exPopoverReactive1"
-                          v-on:click="szur3(), search=''"
+                          v-on:click="szur2(), search=''"
                           size="md"
                           variant="dark"
                           style="text-align: center">
@@ -319,16 +323,20 @@ export default {
     addtocart(elem, step){
       if (elem.alap < elem.ossz) {
         elem.alap = Math.round((elem.alap + step) * 10) / 10;
-        let set = new Set();
-        set.add(elem);
-        this.rendeles=Array.from(set)
+        this.rendeles.push(elem);
+        let set = new Set(this.rendeles);
+        this.rendeles=Array.from(set);
       }
     },
     removefromcart(elem, step){
       elem.alap = Math.round((elem.alap - step) * 10) / 10;
       if (elem.alap==0){
-        this.rendeles.splice(this.rendeles.indexOf(elem), 1);
+        this.del(elem);
       }
+    },
+    del(elem){
+      elem.alap=0;
+      this.rendeles.splice(this.rendeles.indexOf(elem), 1);
     },
     init(){
       this.itemsPerRow=this.szurttomb.length;
@@ -422,7 +430,7 @@ export default {
         this.szurttomb=szurttomb;
         this.itemsPerRow=this.szurttomb.length;
       },
-      szur3(){
+      szur2(){
         if (!this.search) {
           this.input5state = false;
         }else {
