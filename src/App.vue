@@ -1,7 +1,7 @@
 <template>
   <div id ="app">
     <b-navbar toggleable="md" variant="dark" sticky>
-      <b-navbar-toggle target="nav_collapse" :disabled="csakkosar"></b-navbar-toggle>
+      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
       <template>
         <div id="myContainer">
            <div class="my-3">
@@ -14,142 +14,26 @@
                        v-on:click="init(), search='', sortType='', selected=''">
                        Webshop
                </b-btn>
-             <!-- our triggering (target) element -->
              <b-btn
                     class="exPopoverReactive1"
-                    id="exPopoverReactive1"
-                    ref="button"
-                    :disabled="popoverShow"
-                    v-on:click="search='', csakkosar=true"
+                    v-on:click="search='', csakkosar=true, csaktermekek=false"
+                    v-if="csaktermekek"
                     size="md"
                     variant="dark"
                     style="text-align: center">
                     {{this.rendeles.length}} tétel
               </b-btn>
+              <b-btn
+                     class="exPopoverReactive1"
+                     v-on:click="onCancel()"
+                     v-if="csakkosar"
+                     size="md"
+                     variant="dark"
+                     style="text-align: center">
+                     Vissza a termékekhez
+               </b-btn>
               </b-button-group>
            </div>
-          <!-- Our popover title and content render container -->
-          <!-- We use placement 'auto' so popover fits in the best spot on viewport -->
-          <!-- We specify the same container as the trigger button, so that popover is close to button -->
-          <b-popover
-
-                     target="exPopoverReactive1"
-                     triggers="click"
-                     :show.sync="popoverShow"
-                     placement="bottomright"
-                     container="myContainer"
-                     ref="popover"
-                     @show="onShow"
-                     @shown="onShown"
-                     @hidden="onHidden">
-          <template slot="title">
-          <b-btn v-on:click="onCancel" class="close" aria-label="Close">
-            <span class="d-inline-block" aria-hidden="true">&times;</span>
-          </b-btn>
-          Kosár
-          </template>
-          <div>
-          <b-form-group
-                        label="Név*"
-                        label-for="pop1"
-                        horizontal class="mb-1"
-                        :state="input1state"
-                        invalid-feedback="Kötelező kitölteni!">
-            <b-form-input
-                          ref="input1"
-                          type="text"
-                          id="pop1"
-                          size="sm"
-                          v-model="input1"/>
-          </b-form-group>
-          <b-form-group
-                        label="Cím*"
-                        label-for="pop3"
-                        horizontal class="mb-1"
-                        :state="input3state"
-                        invalid-feedback="Kötelező kitölteni!">
-            <b-form-input
-                          ref="input3"
-                          type="text"
-                          id="pop3"
-                          size="sm"
-                          v-model="input3"/>
-          </b-form-group>
-          <b-form-group
-                        label="Tel.*"
-                        label-for="pop4"
-                        horizontal class="mb-1"
-                        :state="input4state"
-                        invalid-feedback="Kötelező kitölteni!">
-            <b-form-input
-                          ref="input4"
-                          type="tel"
-                          id="pop4"
-                          size="sm"
-                          v-model="input4"/>
-          </b-form-group>
-          <b-form-group
-                        label="E-mail*"
-                        label-for="pop5"
-                        horizontal class="mb-1"
-                        :state="input5state"
-                        invalid-feedback="Kötelező kitölteni!">
-            <b-form-input
-                          ref="input5"
-                          placeholder="példa@email.com"
-                          type="email"
-                          id="pop5"
-                          size="sm"
-                          v-model="input5"/>
-          </b-form-group>
-          <b-alert show class="small" style="overflow: auto; height: 170px; width: 420px; background-color: #F5F5F5;">
-            <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
-            <table v-else>
-              <thead>
-                <tr>
-                  <td><strong>Termék neve</strong></td>
-                  <td><strong>Mennyiség</strong></td>
-                  <td><strong>Részösszeg</strong></td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="elem in rendeles" :key="elem.id">
-                  <td>{{ elem.termek }}</td>
-                  <td>
-                    <div
-                         disabled="elem.ossz === 0 ? true : false"
-                         v-if="elem.egys=='kg'"
-                         v-model="elem.alap">
-                         <b-button v-on:click="removefromcart(elem, 0.1)">-</b-button>
-                         {{elem.alap}} {{elem.egys}}
-                         <b-button v-on:click="addtocart(elem, 0.1)">+</b-button>
-                    </div>
-                    <div
-                         disabled="elem.ossz === 0 ? true : false"
-                         v-if="elem.egys!='kg'"
-                         v-model="elem.alap">
-                         <b-button v-on:click="removefromcart(elem, 1)">-</b-button>
-                         {{elem.alap}} {{elem.egys}}
-                         <b-button v-on:click="increment(elem, 1)">+</b-button>
-                    </div>
-                  </td>
-                  <td>
-                    <b-button v-on:click="del(elem)">X</b-button>
-                    {{Math.round(elem.alap*elem.egysar)}} Ft
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </b-alert>
-          <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
-          <br>
-          <br>
-          <b-button-group>
-            <b-btn v-on:click="onClose" size="sm" variant="danger">Kosár kiürítése</b-btn>
-            <b-btn v-on:click="onOk" size="sm" variant="success">Vásárlás</b-btn>
-          </b-button-group>
-        </div>
-      </b-popover>
     </div>
     </template>
     <b-collapse is-nav id="nav_collapse">
@@ -172,7 +56,6 @@
               <b-form-input
                             class="form-control"
                             size="md"
-                            ref="search"
                             placeholder="Keresés"
                             type="text"
                             id="search"
@@ -185,7 +68,8 @@
                           v-on:click="szur2(), search=''"
                           size="md"
                           variant="dark"
-                          style="text-align: center">
+                          style="text-align: center"
+                          :disabled="this.search === '' ? true : false">
                           Keresés
             </b-btn>
           </li>
@@ -193,7 +77,9 @@
        </b-navbar-nav>
      </b-collapse>
    </b-navbar>
-    <div style="text-align:center; margin: 15px auto;">Elérhető termékek</div>
+    <div style="text-align:center; margin: 15px auto;" v-if="csaktermekek">Elérhető termékek</div>
+    <div style="text-align:center; margin: 15px auto;" v-if="csakkosar">Kosár</div>
+    <div style="text-align:center; margin: 15px auto;" v-if="csakadatok">Adatok megadása és vásárlás</div>
     <div class="main">
     <b-modal ref="myModalRef" hide-footer title="Bevásárló alkalmazás">
       <div class="d-block text-center">
@@ -206,12 +92,128 @@
              v-on:click="hideModal">Bezárás</b-btn>
     </b-modal>
     <div class="container">
-    <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)">
+      <div v-if="csakkosar">
+        <b-alert show class="small" style="background-color: #F5F5F5;">
+          <h3 style="color: red; text-align: center; margin: 45px 0px;" v-if="rendeles==0">A kosár üres!</h3>
+          <table v-else>
+            <thead>
+              <tr>
+                <td><strong>Termék neve</strong></td>
+                <td><strong>Cikkszám</strong></td>
+                <td><strong>Egységár</strong></td>
+                <td><strong>Mennyiség</strong></td>
+                <td><strong>Részösszeg</strong></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="elem in rendeles" :key="elem.id">
+                <td>
+                  {{ elem.termek }}
+                </td>
+                <td>
+                  {{ elem.id }}
+                </td>
+                <td>
+                  {{ elem.egysar }}/{{ elem.egys }}
+                </td>
+                <td>
+                  <div
+                       :disabled="elem.ossz === 0 ? true : false"
+                       v-if="elem.egys=='kg'"
+                       v-model="elem.alap">
+                       <b-button v-on:click="removefromcart(elem, 0.1)">-</b-button>
+                       <b-button v-on:click="addtocart(elem, 0.1)">+</b-button>
+                       {{elem.alap}} {{elem.egys}}
+                  </div>
+                  <div
+                       :disabled="elem.ossz === 0 ? true : false"
+                       v-if="elem.egys!='kg'"
+                       v-model="elem.alap">
+                       <b-button v-on:click="removefromcart(elem, 1)">-</b-button>
+                       <b-button v-on:click="increment(elem, 1)">+</b-button>
+                       {{elem.alap}} {{elem.egys}}
+                  </div>
+                </td>
+                <td>
+                  {{Math.round(elem.alap*elem.egysar)}} Ft
+                  <b-button v-on:click="del(elem)">X</b-button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </b-alert>
+        <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
+        <br>
+        <br>
+        <b-button-group class="responsive">
+          <b-btn v-on:click="onClose()" size="sm" variant="danger">Kosár kiürítése</b-btn>
+          <b-btn v-on:click="onShow(), csakkosar=false, csakadatok=true" size="sm" variant="success" :disabled="this.rendeles==0 ? true : false">Tovább az adatokhoz</b-btn>
+        </b-button-group>
+      </div>
+    <div v-if="csakadatok">
+      <b-form-group
+                    label="Név*"
+                    label-for="pop1"
+                    horizontal class="mb-1"
+                    :state="input1state"
+                    invalid-feedback="Kötelező kitölteni!">
+        <b-form-input
+                      type="text"
+                      id="pop1"
+                      size="sm"
+                      v-model="input1"/>
+      </b-form-group>
+      <b-form-group
+                    label="Cím*"
+                    label-for="pop3"
+                    horizontal class="mb-1"
+                    :state="input3state"
+                    invalid-feedback="Kötelező kitölteni!">
+        <b-form-input
+                      type="text"
+                      id="pop3"
+                      size="sm"
+                      v-model="input3"/>
+      </b-form-group>
+      <b-form-group
+                    label="Telefonszám*"
+                    label-for="pop4"
+                    horizontal class="mb-1"
+                    :state="input4state"
+                    invalid-feedback="Kötelező kitölteni!">
+        <b-form-input
+                      type="tel"
+                      id="pop4"
+                      size="sm"
+                      v-model="input4"/>
+      </b-form-group>
+      <b-form-group
+                    label="E-mail cím*"
+                    label-for="pop5"
+                    horizontal class="mb-1"
+                    :state="input5state"
+                    invalid-feedback="Kötelező kitölteni!">
+        <b-form-input
+                      placeholder="példa@email.com"
+                      type="email"
+                      id="pop5"
+                      size="sm"
+                      v-model="input5"/>
+      </b-form-group>
+      <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
+      <br>
+      <br>
+      <b-button-group class="responsive">
+        <b-btn v-on:click="csakkosar=true, csakadatok=false" size="sm" variant="danger">Vissza a kosárhoz</b-btn>
+        <b-btn v-on:click="onOk()" size="sm" variant="success">Vásárlás</b-btn>
+      </b-button-group>
+    </div>
+    <div class="row" v-for="i in Math.ceil(this.szurttomb.length / itemsPerRow)" v-if="csaktermekek">
       <b-card
               bg-variant="light"
               id="card"
               footer-bg-variant="secondary"
-              show v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
+              v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
               :key="elem.id"
               :img-src="elem.url"
               style="max-width: 274px;"
@@ -223,13 +225,13 @@
        <p class="card-text" v-if="elem.ossz > 0">Raktáron</p>
        <p class="card-text" v-else>Elfogyott</p>
        <div
-            disabled="elem.ossz === 0 ? true : false"
+            :disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys=='kg'"
             v-model="elem.alap">
             <b-button v-on:click="addtocart(elem, 0.1)">Kosárba</b-button>
        </div>
        <div
-            disabled="elem.ossz === 0 ? true : false"
+            :disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys!='kg'"
             v-model="elem.alap">
             <b-button v-on:click="addtocart(elem, 1)">Kosárba</b-button>
@@ -254,12 +256,14 @@
 export default {
   data() {
     return {
+      csakadatok: false,
       csakkosar: false,
+      csakvasarlas: false,
+      csaktermekek: true,
       name: 'shlist',
       show: true,
       search:'',
       searchstate: null,
-      mid: 1,
       input1: '',
       input1state: null,
       input3: '',
@@ -268,7 +272,6 @@ export default {
       input4state: null,
       input5: '',
       input5state: null,
-      popoverShow: false,
       szurttomb: [],
       rendeles: [],
       selected: '',
@@ -364,7 +367,7 @@ export default {
     onCancel(){
       this.search='';
       this.csakkosar=false;
-      this.popoverShow = false;
+      this.csaktermekek=true;
       console.log('Quit cart');
     },
     onClose () {
@@ -377,15 +380,15 @@ export default {
       if (!this.input3) { this.input3state = false; }
       if (!this.input4) { this.input4state = false; }
       if (!this.input5) { this.input5state = false; }
-      if (this.input1 && this.input3 && this.input4 && this.input5 && this.rendeles!=0) {
+      if (this.input1 && this.input3 && this.input4 && this.input5) {
         console.log('Make API request');
         this.onReset();
         this.showModal();
       }
     },
     onShow () {
-      /* This is called just before the popover is shown */
-      /* Reset our popover "form" variables */
+      /* This is called just before the basket is shown */
+      /* Reset our "form" variables */
       this.input1 = '';
       this.input3 = '';
       this.input4 = '';
@@ -395,29 +398,14 @@ export default {
       this.input4state = null;
       this.input5state = null;
     },
-    onShown () {
-      /* Called just after the popover has been shown */
-      /* Transfer focus to the first input */
-      this.focusRef(this.$refs.input1);
-    },
-    onHidden () {
-      /* Called just after the popover has finished hiding */
-      /* Bring focus back to the button */
-      this.focusRef(this.$refs.button);
-    },
-    focusRef (ref) {
-      /* Some references may be a component, functional component, or plain element */
-      /* This handles that check before focusing, assuming a focus() method exists */
-      /* We do this in a double nextTick to ensure components have updated & popover positioned first */
-      this.$nextTick(() => {
-        this.$nextTick(() => { (ref.$el || ref).focus() });
-      });
-  },
     onReset () {
       Object.assign(this.$data, this.$options.data());
       console.log('Reset values');
     },
     szur () {
+      this.csakadatok=false
+      this.csakkosar=false;
+      this.csaktermekek=true;
       let szurttomb = this.tomb.filter(v => v.type==this.selected);
       switch (this.sortType) {
           case 'termek':
@@ -431,6 +419,9 @@ export default {
         this.itemsPerRow=this.szurttomb.length;
       },
       szur2(){
+        this.csakadatok=false
+        this.csakkosar=false;
+        this.csaktermekek=true;
         if (!this.search) {
           this.input5state = false;
         }else {
@@ -505,12 +496,9 @@ table {
     border-collapse: collapse;
     width: 100%;
 }
-
 th, td {
     padding: 8px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
-
-tr:hover {background-color:#f5f5f5;}
 </style>
