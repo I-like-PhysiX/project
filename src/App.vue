@@ -213,7 +213,7 @@
               bg-variant="light"
               id="card"
               footer-bg-variant="secondary"
-              v-for="elem in szurttomb.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
+              v-for="elem in paginatedData.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
               :key="elem.id"
               :img-src="elem.url"
               style="max-width: 274px;"
@@ -241,7 +241,10 @@
   </div>
 </div>
 <div class="text-mid">
-  <div class="center">
+  <div class="center" style="text-align: center;" v-if="this.csaktermekek">
+    <b-button :disabled="this.pageNumber == 0" v-on:click="this.prevPage">Előző</b-button>
+    {{this.pageNumber}}/{{this.pageCount}}
+    <b-button :disabled="this.pageNumber > this.pageCount-1" v-on:click="this.nextPage">Következő</b-button>
   </div>
 </div>
 <b-navbar toggleable="md" variant="dark" class="bottom">
@@ -256,6 +259,8 @@
 export default {
   data() {
     return {
+      pageNumber: 0,
+      size: 4,
       csakadatok: false,
       csakkosar: false,
       csakvasarlas: false,
@@ -287,7 +292,7 @@ export default {
         {id:2, type: "gyümölcs", termek: "Alma, golden", info: "", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
         {id:3, type: "gyümölcs", termek: "Alma, jonatán", info: "", egysar:290, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
         {id:4, type: "gyümölcs", termek: "Körte, vilmos", info: "", egysar:550, egys:'kg', alap:0, ossz:10, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
-        {id:5, type: "gyümölcs", termek: "Narancs, lédig", info: "Akció!", egysar:350, egys:'kg', alap:0, ossz:0, url: 'http://images6.fanpop.com/image/photos/34500000/Orange-Fruit-orange-34512935-600-600.png'},
+        {id:5, type: "gyümölcs", termek: "Narancs, lédig", info: "Akció!", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://www.oils4life.co.uk/WebRoot/Store/Shops/es133723/5050/8B8D/C6A3/4AC2/1077/0A0F/1118/CDD2/iStock_PEO_Orange_000005631608XSmall.jpg'},
         {id:6, type: "gyümölcs", termek: "Banán, lédig", info: "", egysar:350, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
         {id:7, type: "gyümölcs", termek: "Eper, magyar", info: "Akció!", egysar:600, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
         {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", info: "", egysar:250, egys:'doboz', alap:0, ossz:10, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
@@ -323,6 +328,12 @@ export default {
      }
    },
   methods: {
+    nextPage(){
+         this.pageNumber++;
+      },
+      prevPage(){
+        this.pageNumber--;
+      },
     addtocart(elem, step){
       if (elem.alap < elem.ossz) {
         elem.alap = Math.round((elem.alap + step) * 10) / 10;
@@ -436,6 +447,20 @@ export default {
     this.init();
   },
   computed: {
+    pageCount(){
+      var l = this.szurttomb.length;
+      var s = this.size;
+      if (l<=s){
+        return 0;
+      } else {
+        return Math.floor(l/s);
+      }
+    },
+    paginatedData(){
+      var start = this.pageNumber * this.size;
+      var end = start + this.size;
+      return this.szurttomb.slice(start, end);
+    },
     osszeg() {
       return Math.round(this.rendeles.reduce((o,v)=>o+v.egysar*v.alap,0)/5)*5;
     }
