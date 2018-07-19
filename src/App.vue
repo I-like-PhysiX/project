@@ -221,7 +221,7 @@
               img-alt="A termék képe"
               img-top
               class="image">
-       <div class="top-right"><h3 style="color: red;">{{elem.info}}</h3></div>
+       <div class="top-right"><h3 style="color: red; background-color: yellow;"><strong>{{elem.info}}</strong></h3></div>
        <p class="card-text"><p>{{elem.termek}}</p> <p>{{elem.egysar}} Ft/{{elem.egys}}</p></p>
        <p class="card-text" style="color: green;" v-if="elem.ossz > 0">Raktáron</p>
        <p class="card-text" style="color: red;" v-else>Elfogyott</p>
