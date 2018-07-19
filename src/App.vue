@@ -118,19 +118,17 @@
                 </td>
                 <td>
                   <div
-                       :disabled="elem.ossz === 0 ? true : false"
                        v-if="elem.egys=='kg'"
                        v-model="elem.alap">
                        <b-button v-on:click="removefromcart(elem, 0.1)">-</b-button>
-                       <b-button v-on:click="addtocart(elem, 0.1)">+</b-button>
+                       <b-button :disabled="elem.alap == elem.ossz ? true : false" v-on:click="addtocart(elem, 0.1)">+</b-button>
                        {{elem.alap}} {{elem.egys}}
                   </div>
                   <div
-                       :disabled="elem.ossz === 0 ? true : false"
                        v-if="elem.egys!='kg'"
                        v-model="elem.alap">
                        <b-button v-on:click="removefromcart(elem, 1)">-</b-button>
-                       <b-button v-on:click="increment(elem, 1)">+</b-button>
+                       <b-button :disabled="elem.alap == elem.ossz ? true : false" v-on:click="addtocart(elem, 1)">+</b-button>
                        {{elem.alap}} {{elem.egys}}
                   </div>
                 </td>
@@ -216,26 +214,24 @@
               v-for="elem in paginatedData.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
               :key="elem.id"
               :img-src="elem.url"
-              v-bind:style= "[elem.ossz==0 ? {opacity: 0.6} : {}]"
+              v-bind:style= "[!elem.raktaron ? {opacity: 0.6} : {}]"
               style="max-width: 274px;"
               img-alt="A termék képe"
               img-top
               class="image">
        <div class="top-right"><h3 style="color: red; background-color: yellow;"><strong>{{elem.info}}</strong></h3></div>
        <p class="card-text"><p>{{elem.termek}}</p> <p>{{elem.egysar}} Ft/{{elem.egys}}</p></p>
-       <p class="card-text" style="color: green;" v-if="elem.ossz > 0">Raktáron</p>
+       <p class="card-text" style="color: green;" v-if="elem.raktaron">Raktáron</p>
        <p class="card-text" style="color: red;" v-else>Elfogyott</p>
        <div
-            :disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys=='kg'"
             v-model="elem.alap">
-            <b-button v-on:click="addtocart(elem, 0.1)">Kosárba</b-button>
+            <b-button :disabled="!elem.raktaron" v-on:click="addtocart(elem, 0.1)">Kosárba</b-button>
        </div>
        <div
-            :disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys!='kg'"
             v-model="elem.alap">
-            <b-button v-on:click="addtocart(elem, 1)">Kosárba</b-button>
+            <b-button :disabled="!elem.raktaron" v-on:click="addtocart(elem, 1)">Kosárba</b-button>
        </div>
       </b-card>
     </div>
@@ -289,15 +285,15 @@ export default {
        ],
       itemsPerRow: 1,
       tomb: [
-        {id:1, type: "gyümölcs", termek: "Alma, gála", info: "Akció!", egysar:310, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:2, type: "gyümölcs", termek: "Alma, golden", info: "", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:3, type: "gyümölcs", termek: "Alma, jonatán", info: "", egysar:290, egys:'kg', alap:0, ossz:10, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:4, type: "gyümölcs", termek: "Körte, vilmos", info: "", egysar:550, egys:'kg', alap:0, ossz:10, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
-        {id:5, type: "gyümölcs", termek: "Narancs, lédig", info: "Akció!", egysar:350, egys:'kg', alap:0, ossz:0, url: 'https://www.fruitsinfo.com/images/fruits-list-large/wild-orange-3.jpg'},
-        {id:6, type: "gyümölcs", termek: "Banán, lédig", info: "", egysar:350, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
-        {id:7, type: "gyümölcs", termek: "Eper, magyar", info: "Akció!", egysar:600, egys:'kg', alap:0, ossz:10, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
-        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", info: "", egysar:250, egys:'doboz', alap:0, ossz:10, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
-        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", info: "Akció!", egysar:350, egys:'doboz', alap:0, ossz:0, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
+        {id:1, type: "gyümölcs", termek: "Alma, gála", info: "Akció!", egysar:310, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:2, type: "gyümölcs", termek: "Alma, golden", info: "", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:false, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:3, type: "gyümölcs", termek: "Alma, jonatán", info: "", egysar:290, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:4, type: "gyümölcs", termek: "Körte, vilmos", info: "", egysar:550, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
+        {id:5, type: "gyümölcs", termek: "Narancs, lédig", info: "Akció!", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:false, url: 'https://www.fruitsinfo.com/images/fruits-list-large/wild-orange-3.jpg'},
+        {id:6, type: "gyümölcs", termek: "Banán, lédig", info: "", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
+        {id:7, type: "gyümölcs", termek: "Eper, magyar", info: "Akció!", egysar:600, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
+        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", info: "", egysar:250, egys:'doboz', alap:0, ossz:10, raktaron:true, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
+        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", info: "Akció!", egysar:350, egys:'doboz', alap:0, ossz:10, raktaron:false, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
       ]
     }
   },
@@ -330,18 +326,17 @@ export default {
    },
   methods: {
     nextPage(){
-         this.pageNumber++;
-      },
-      prevPage(){
-        this.pageNumber--;
-      },
+      this.pageNumber++;
+    },
+    prevPage(){
+      this.pageNumber--;
+    },
     addtocart(elem, step){
-      if (elem.alap < elem.ossz) {
-        elem.alap = Math.round((elem.alap + step) * 10) / 10;
-        this.rendeles.push(elem);
-        let set = new Set(this.rendeles);
-        this.rendeles=Array.from(set);
-      }
+      elem.alap = Math.round((elem.alap + step) * 10) / 10;
+      this.rendeles.push(elem);
+      let set = new Set(this.rendeles);
+      this.rendeles=Array.from(set);
+
     },
     removefromcart(elem, step){
       elem.alap = Math.round((elem.alap - step) * 10) / 10;
