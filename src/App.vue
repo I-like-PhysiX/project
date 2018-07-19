@@ -146,7 +146,7 @@
         <br>
         <br>
         <b-button-group class="responsive">
-          <b-btn v-on:click="onClose()" size="sm" variant="danger">Kosár kiürítése</b-btn>
+          <b-btn v-on:click="onClose()" size="sm" variant="danger" :disabled="this.rendeles==0 ? true : false">Kosár kiürítése</b-btn>
           <b-btn v-on:click="onShow(), csakkosar=false, csakadatok=true" size="sm" variant="success" :disabled="this.rendeles==0 ? true : false">Tovább az adatokhoz</b-btn>
         </b-button-group>
       </div>
@@ -216,14 +216,15 @@
               v-for="elem in paginatedData.slice((i - 1) * itemsPerRow, i * itemsPerRow)"
               :key="elem.id"
               :img-src="elem.url"
+              v-bind:style= "[elem.ossz==0 ? {opacity: 0.6} : {}]"
               style="max-width: 274px;"
               img-alt="A termék képe"
               img-top
               class="image">
        <div class="top-right"><h3 style="color: red;">{{elem.info}}</h3></div>
        <p class="card-text"><p>{{elem.termek}}</p> <p>{{elem.egysar}} Ft/{{elem.egys}}</p></p>
-       <p class="card-text" v-if="elem.ossz > 0">Raktáron</p>
-       <p class="card-text" v-else>Elfogyott</p>
+       <p class="card-text" style="color: green;" v-if="elem.ossz > 0">Raktáron</p>
+       <p class="card-text" style="color: red;" v-else>Elfogyott</p>
        <div
             :disabled="elem.ossz === 0 ? true : false"
             v-if="elem.egys=='kg'"
@@ -242,14 +243,14 @@
 </div>
 <div class="text-mid">
   <div class="center" style="text-align: center;" v-if="this.csaktermekek">
-    <b-button :disabled="this.pageNumber == 0" v-on:click="this.prevPage">Előző</b-button>
+    <b-button :disabled="this.pageNumber == 0" v-on:click="this.prevPage"><-</b-button>
     {{this.pageNumber}}/{{this.pageCount}}
-    <b-button :disabled="this.pageNumber > this.pageCount-1" v-on:click="this.nextPage">Következő</b-button>
+    <b-button :disabled="this.pageNumber > this.pageCount-1" v-on:click="this.nextPage">-></b-button>
   </div>
 </div>
 <b-navbar toggleable="md" variant="dark" class="bottom">
   <div class="footer" style="color:white;  margin: 0px auto;">
-    © 2018. All Rights Reserved
+    © 2018. Minden jog fenntartva
   </div>
 </b-navbar>
 </div>
