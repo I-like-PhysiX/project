@@ -2,7 +2,6 @@
   <div id ="app">
     <b-navbar toggleable="md" variant="dark" sticky>
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <template>
         <div id="myContainer">
            <div class="my-3">
              <b-button-group>
@@ -35,13 +34,13 @@
               </b-button-group>
            </div>
     </div>
-    </template>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav class="ml-auto">
         <ul class="navbar-nav mr-auto" style="margin-top: 15px;">
           <li class="nav-item active">
             <select id="selecttype" v-model="selected" v-on:change="szur()" class="form-control input-sm">
               <option value="" disabled>Termékfajták</option>
+              <option v-for="item in this.species" :value="item.value" :disabled="item.isdisabled">{{item.text}}</option>
             </select>
           </li>
           <li class="nav-item active">
@@ -80,6 +79,7 @@
     <div style="text-align:center; margin: 15px auto;" v-if="csaktermekek">Elérhető termékek</div>
     <div style="text-align:center; margin: 15px auto;" v-if="csakkosar">Kosár</div>
     <div style="text-align:center; margin: 15px auto;" v-if="csakadatok">Adatok megadása és vásárlás</div>
+
     <div class="main">
     <b-modal ref="myModalRef" hide-footer title="Bevásárló alkalmazás">
       <div class="d-block text-center">
@@ -99,19 +99,15 @@
             <thead>
               <tr>
                 <td><strong>Termék neve</strong></td>
-                <td><strong>Cikkszám</strong></td>
                 <td><strong>Egységár</strong></td>
                 <td><strong>Mennyiség</strong></td>
                 <td><strong>Részösszeg</strong></td>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="elem in rendeles" :key="elem.id">
+              <tr v-for="elem in rendeles">
                 <td>
                   {{ elem.termek }}
-                </td>
-                <td>
-                  {{ elem.id }}
                 </td>
                 <td>
                   {{ elem.egysar }}/{{ elem.egys }}
@@ -276,13 +272,15 @@ export default {
       input5state: null,
       szurttomb: [],
       rendeles: [],
+      tomb2: [],
+      species: [],
       selected: '',
       sortType: '',
       sortOptions: [
           { text: 'Rendezés', value: '', isdisabled: true},
           { text: 'abc szerint', value: 'termek', isdisabled: false},
           { text: 'ár szerint', value: 'egysar', isdisabled: false}
-       ],
+      ],
       itemsPerRow: 1,
       tomb: [
         {id:1, type: "gyümölcs", termek: "Alma, gála", info: "Akció!", egysar:310, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
@@ -325,6 +323,12 @@ export default {
      }
    },
   methods: {
+    addrow() {
+      this.tomb2.push({id:0, type: "", termek: "", info: "", egysar:0, egys:'', alap:0, ossz:0, raktaron:false, url: ''});
+    },
+    delrow(elem){
+      this.tomb2.splice(this.tomb2.indexOf(elem), 1);
+    },
     nextPage(){
       this.pageNumber++;
     },
@@ -360,9 +364,15 @@ export default {
       let mySet = new Set();
       this.tomb.forEach(v => mySet.add(v.type));
       let myArray = Array.from(mySet);
-      let dropdown = document.getElementById("selecttype");
-      for (var i = 0; i < myArray.length; ++i) {
-        dropdown[dropdown.length] = new Option(myArray[i], myArray[i])};
+      var species=[];
+      myArray.forEach(v => species.push({
+                                          text: v,
+                                          value: v,
+                                          isdisabled: false
+                                       })
+      );
+      this.species=species;
+      console.log(this.species);
     },
     showModal () {
       this.$refs.myModalRef.show()
@@ -443,6 +453,7 @@ export default {
   mounted() {
     this.create_selection();
     this.init();
+
   },
   computed: {
     pageCount(){
