@@ -372,7 +372,6 @@ export default {
                                        })
       );
       this.species=species;
-      console.log(this.species);
     },
     showModal () {
       this.$refs.myModalRef.show()
