@@ -272,7 +272,6 @@ export default {
       input5state: null,
       szurttomb: [],
       rendeles: [],
-      tomb2: [],
       species: [],
       selected: '',
       sortType: '',
@@ -323,12 +322,6 @@ export default {
      }
    },
   methods: {
-    addrow() {
-      this.tomb2.push({id:0, type: "", termek: "", info: "", egysar:0, egys:'', alap:0, ossz:0, raktaron:false, url: ''});
-    },
-    delrow(elem){
-      this.tomb2.splice(this.tomb2.indexOf(elem), 1);
-    },
     nextPage(){
       this.pageNumber++;
     },
