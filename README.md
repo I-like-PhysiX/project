@@ -10,6 +10,10 @@ npm install -g @vue/cli
 vue create project
 vue init bootstrap-vue/webpack-simple project
 npm i bootstrap-vue
+cd webshop
+npm install
+
+# copy the necessary code to the right place
 
 # serve with hot reload at localhost:8080
 npm run dev
@@ -22,11 +26,3 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
-5.) terminal: cd project
-
-6.) terminal: npm install
-
-7.) delete the components directory in the project directory, copy the necessary code to the right place
-
-8.) terminal: npm run dev
