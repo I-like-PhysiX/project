@@ -1,18 +1,27 @@
-# Simple webshop prototype
+# Simple webshop prototrype
 
+> A Vue.js project
 
-Installation guide step by step
+## Build Setup
 
+``` bash
+# install dependencies
+npm install -g @vue/cli
+vue create project
+vue init bootstrap-vue/webpack-simple project
+npm i bootstrap-vue
 
-0.) open terminal, create an install directory and enter this folder
+# serve with hot reload at localhost:8080
+npm run dev
 
-1.) terminal: npm install -g @vue/cli
+# build for production with minification
+npm run build
 
-2.) terminal: vue create project
+# build for production and view the bundle analyzer report
+npm run build --report
+```
 
-3.) terminal: vue init bootstrap-vue/webpack-simple project
-
-4.) terminal: npm i bootstrap-vue
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 5.) terminal: cd project
 
