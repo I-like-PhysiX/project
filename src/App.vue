@@ -76,6 +76,7 @@
        </b-navbar-nav>
      </b-collapse>
    </b-navbar>
+
     <div style="text-align:center; margin: 15px auto;" v-if="csaktermekek">Elérhető termékek</div>
     <div style="text-align:center; margin: 15px auto;" v-if="csakkosar">Kosár</div>
     <div style="text-align:center; margin: 15px auto;" v-if="csakadatok">Adatok megadása és vásárlás</div>
@@ -146,54 +147,53 @@
       </div>
     <div v-if="csakadatok">
       <b-form-group
-                    id="fieldset1"
-                    label="Név:"
-                    label-for="input1"
+                    label="Név*"
+                    label-for="pop1"
+                    horizontal class="mb-1"
                     :state="input1state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
-                      id="input1"
                       type="text"
-                      required
-                      placeholder="Név"
+                      id="pop1"
+                      size="sm"
                       v-model="input1"/>
       </b-form-group>
       <b-form-group
-                    id="fieldset2"
-                    label="Lakcím:"
-                    label-for="input2"
+                    label="Cím*"
+                    label-for="pop3"
+                    horizontal class="mb-1"
                     :state="input3state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
-                      id="input2"
                       type="text"
+                      id="pop3"
+                      size="sm"
                       v-model="input3"/>
       </b-form-group>
       <b-form-group
-                    id="fieldset4"
-                    label="Telefonszám:"
-                    label-for="input4"
+                    label="Telefonszám*"
+                    label-for="pop4"
+                    horizontal class="mb-1"
                     :state="input4state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
-                      id="input3"
                       type="tel"
-                      v-model="input4"
-                      required
-                      placeholder="Telefonszám"/>
+                      id="pop4"
+                      size="sm"
+                      v-model="input4"/>
       </b-form-group>
       <b-form-group
-                    id="fieldset5"
-                    label="Email cím:"
-                    label-for="input5"
+                    label="E-mail cím*"
+                    label-for="pop5"
+                    horizontal class="mb-1"
                     :state="input5state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
-                      id="input5"
+                      placeholder="példa@email.com"
                       type="email"
-                      v-model="input5"
-                      required
-                      placeholder="példa@email.com"/>
+                      id="pop5"
+                      size="sm"
+                      v-model="input5"/>
       </b-form-group>
       <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
       <br>
@@ -250,6 +250,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -259,8 +261,6 @@ export default {
       csakkosar: false,
       csakvasarlas: false,
       csaktermekek: true,
-      name: 'shlist',
-      show: true,
       search:'',
       searchstate: null,
       input1: '',
@@ -271,6 +271,17 @@ export default {
       input4state: null,
       input5: '',
       input5state: null,
+      tomb: [
+        {id:1, type: "gyümölcs", termek: "Alma, gála", info: "Akció!", egysar:310, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:2, type: "gyümölcs", termek: "Alma, golden", info: "", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:false, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:3, type: "gyümölcs", termek: "Alma, jonatán", info: "", egysar:290, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
+        {id:4, type: "gyümölcs", termek: "Körte, vilmos", info: "", egysar:550, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
+        {id:5, type: "gyümölcs", termek: "Narancs, lédig", info: "Akció!", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:false, url: 'https://www.fruitsinfo.com/images/fruits-list-large/wild-orange-3.jpg'},
+        {id:6, type: "gyümölcs", termek: "Banán, lédig", info: "", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
+        {id:7, type: "gyümölcs", termek: "Eper, magyar", info: "Akció!", egysar:600, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
+        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", info: "", egysar:250, egys:'doboz', alap:0, ossz:10, raktaron:true, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
+        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", info: "Akció!", egysar:350, egys:'doboz', alap:0, ossz:10, raktaron:false, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
+            ],
       szurttomb: [],
       rendeles: [],
       species: [],
@@ -282,17 +293,6 @@ export default {
           { text: 'ár szerint', value: 'egysar', isdisabled: false}
       ],
       itemsPerRow: 1,
-      tomb: [
-        {id:1, type: "gyümölcs", termek: "Alma, gála", info: "Akció!", egysar:310, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:2, type: "gyümölcs", termek: "Alma, golden", info: "", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:false, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:3, type: "gyümölcs", termek: "Alma, jonatán", info: "", egysar:290, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://4.imimg.com/data4/QY/GN/MY-24065638/fresh-apple-500x500.jpg'},
-        {id:4, type: "gyümölcs", termek: "Körte, vilmos", info: "", egysar:550, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://3.imimg.com/data3/WQ/FT/MY-7265137/fresh-pear-500x500.jpg'},
-        {id:5, type: "gyümölcs", termek: "Narancs, lédig", info: "Akció!", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:false, url: 'https://www.fruitsinfo.com/images/fruits-list-large/wild-orange-3.jpg'},
-        {id:6, type: "gyümölcs", termek: "Banán, lédig", info: "", egysar:350, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://5.imimg.com/data5/CT/TI/MY-8900429/ripened-organic-banana-500x500.jpg'},
-        {id:7, type: "gyümölcs", termek: "Eper, magyar", info: "Akció!", egysar:600, egys:'kg', alap:0, ossz:10, raktaron:true, url: 'https://5.imimg.com/data5/FY/QK/MY-40752636/fresh-strawberry-500x500.jpg'},
-        {id:8, type: "tejtermék", termek: "Tejföl, kunsági, 250 g", info: "", egysar:250, egys:'doboz', alap:0, ossz:10, raktaron:true, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'},
-        {id:9, type: "tejtermék", termek: "Tejföl, Riska, 250g", info: "Akció!", egysar:350, egys:'doboz', alap:0, ossz:10, raktaron:false, url: 'https://i5.walmartimages.com/asr/278c6980-ff4c-4c6f-8bcc-c7a13bd4b987_1.9513a8277bd8464ff661e6ddf8113f8f.jpeg?odnHeight=450&odnWidth=450&odnBg=FFFFFF'}
-      ]
     }
   },
   watch: {
@@ -332,9 +332,7 @@ export default {
     addtocart(elem, step){
       elem.alap = Math.round((elem.alap + step) * 10) / 10;
       this.rendeles.push(elem);
-      let set = new Set(this.rendeles);
-      this.rendeles=Array.from(set);
-
+      this.rendeles=Array.from(new Set(this.rendeles));
     },
     removefromcart(elem, step){
       elem.alap = Math.round((elem.alap - step) * 10) / 10;
@@ -347,8 +345,7 @@ export default {
       this.rendeles.splice(this.rendeles.indexOf(elem), 1);
     },
     init(){
-      this.itemsPerRow=this.szurttomb.length;
-      let szurttomb = this.tomb.filter(v => v.info=="Akció!");
+      var szurttomb = this.tomb.filter(v => v.info=="Akció!");
       this.szurttomb=szurttomb;
       this.itemsPerRow=this.szurttomb.length;
       this.onCancel();
@@ -444,8 +441,8 @@ export default {
       }
   },
   mounted() {
-    this.create_selection();
     this.init();
+    this.create_selection();
 
   },
   computed: {
