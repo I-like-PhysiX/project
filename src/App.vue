@@ -146,53 +146,54 @@
       </div>
     <div v-if="csakadatok">
       <b-form-group
-                    label="Név*"
-                    label-for="pop1"
-                    horizontal class="mb-1"
+                    id="fieldset1"
+                    label="Név:"
+                    label-for="input1"
                     :state="input1state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
+                      id="input1"
                       type="text"
-                      id="pop1"
-                      size="sm"
+                      required
+                      placeholder="Név"
                       v-model="input1"/>
       </b-form-group>
       <b-form-group
-                    label="Cím*"
-                    label-for="pop3"
-                    horizontal class="mb-1"
+                    id="fieldset2"
+                    label="Lakcím:"
+                    label-for="input2"
                     :state="input3state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
+                      id="input2"
                       type="text"
-                      id="pop3"
-                      size="sm"
                       v-model="input3"/>
       </b-form-group>
       <b-form-group
-                    label="Telefonszám*"
-                    label-for="pop4"
-                    horizontal class="mb-1"
+                    id="fieldset4"
+                    label="Telefonszám:"
+                    label-for="input4"
                     :state="input4state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
+                      id="input3"
                       type="tel"
-                      id="pop4"
-                      size="sm"
-                      v-model="input4"/>
+                      v-model="input4"
+                      required
+                      placeholder="Telefonszám"/>
       </b-form-group>
       <b-form-group
-                    label="E-mail cím*"
-                    label-for="pop5"
-                    horizontal class="mb-1"
+                    id="fieldset5"
+                    label="Email cím:"
+                    label-for="input5"
                     :state="input5state"
                     invalid-feedback="Kötelező kitölteni!">
         <b-form-input
-                      placeholder="példa@email.com"
+                      id="input5"
                       type="email"
-                      id="pop5"
-                      size="sm"
-                      v-model="input5"/>
+                      v-model="input5"
+                      required
+                      placeholder="példa@email.com"/>
       </b-form-group>
       <strong>Összesen fizetendő:</strong> <b>{{this.osszeg}} Ft</b>
       <br>
