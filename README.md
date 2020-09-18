@@ -1,4 +1,4 @@
-# Simple webshop prototrype
+# Simple webshop prototype
 
 > A Vue.js project
 
